@@ -5,7 +5,7 @@ Have you ever been to a supermarket, passing through the ice cream aisle, ponder
 Well... this script will help you keep tabs on your frozen adventures and get personalized picks for your next cool treat! 
 Life is too short for bland ice cream ;) 
 
-This is an interactive C++ program that suggests ice cream options based on user preferences and tracks consumption history, powered by JSON data storage for a personalized ice cream experience.
+This is an interactive C++ program that suggests ice cream options based on user preferences and tracks consumption history, using text file data storage for a personalized ice cream experience.
 
 The only requirement to make use of this script is the possibility of the ice cream shelf being depicted as a 2D array. 
 (pic related)
