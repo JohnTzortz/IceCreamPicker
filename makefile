@@ -18,5 +18,4 @@ clean:
 	rm -f $(OBJS) $(TARGET)
 
 run: $(TARGET)
-	rm ice_cream_data.txt
 	./$(TARGET)
