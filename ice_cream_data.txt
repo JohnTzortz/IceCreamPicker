@@ -1,0 +1,15 @@
+"No-name" 1 0 1 0 0
+"No-name" 1 0 1 0 1
+"Bennjerrys" 0 0 1 0 2
+"No-name" 1 0 1 1 0
+"VAMVOUKAKIS" 0 0 1 1 1
+"No-name" 1 0 1 1 2
+"era" 0 0 1 2 0
+"KALIPSRA" 0 0 1 2 1
+"No-name" 1 0 1 2 2
+"No-name" 1 0 1 3 0
+"No-name" 1 0 1 3 1
+"No-name" 1 0 1 3 2
+"No-name" 1 0 1 4 0
+"No-name" 1 0 1 4 1
+"No-name" 1 0 1 4 2
