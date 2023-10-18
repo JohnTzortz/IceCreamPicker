@@ -249,7 +249,7 @@ void top3(std::vector<IceCream>& iceCreams){
 }
 
 void doNothing(std::vector<IceCream>& iceCreams){
-
+    random_no_option_dialog();
 }
 
 void finishProgram(std::vector<IceCream>& iceCreams){
@@ -271,12 +271,15 @@ bool passValuesToFile(std::ofstream& outFile, std::vector<IceCream> iceCreams){
     }else
         return false;
 
+
+    std::cout << "Saved!\n";
     return true;
 }
 
-
 int main() {
     std::srand(std::time(0));
+
+    setDialogCounter();
 
     std::vector<IceCream> iceCreamVector;
 
@@ -312,13 +315,7 @@ int main() {
         
         functionality[userStringInput(iceCreamVector)](iceCreamVector);
     }
-    
 
-    // Filter the ice creams based on your criteria
-
-    // Display recommendations
-
-    // Record selection and update the text file
 
     return 0;
 }
