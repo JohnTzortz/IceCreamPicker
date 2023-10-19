@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdlib> 
 #include <ctime>
+#include <algorithm>
 #include "fun.hpp"
 
 
@@ -245,6 +246,17 @@ void editVector(std::vector<IceCream>& iceCreams){
 
 void top3(std::vector<IceCream>& iceCreams){
 
+    std::vector<IceCream> sortedIceCreams = iceCreams;
+
+    // Sort the vector based on rating in descending order
+    std::sort(sortedIceCreams.begin(), sortedIceCreams.end(), [](const IceCream& a, const IceCream& b) {
+        return a.rating > b.rating;
+    });
+
+
+    std::cout<< "#1: " << sortedIceCreams.at(0).name <<" with rating "<< sortedIceCreams.at(0).rating<<"/10."<<" Shelf -> (" <<sortedIceCreams.at(0).location.first<<","<<sortedIceCreams.at(0).location.second<<")"<<std::endl;
+    std::cout<< "#2: "<< sortedIceCreams.at(1).name<<" with rating "<< sortedIceCreams.at(1).rating<<"/10."<<" Shelf -> ("<<sortedIceCreams.at(1).location.first<< ","<<sortedIceCreams.at(1).location.second<<")"<<std::endl;
+    std::cout<< "#3: "<< sortedIceCreams.at(2).name<<" with rating "<< sortedIceCreams.at(2).rating<<"/10."<<" Shelf -> ("<<sortedIceCreams.at(2).location.first<< ","<<sortedIceCreams.at(2).location.second<<")"<<std::endl;
 
 }
 
