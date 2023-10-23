@@ -4,6 +4,7 @@
 #include <cstdlib> 
 #include <ctime>
 #include <algorithm>
+#include <limits>
 #include "fun.hpp"
 
 
@@ -34,6 +35,14 @@ std::vector<IceCream> loadIceCreamData() {
     return iceCreams;
 }
 
+/**
+ * I have to clean the buffer after using cin because leaves a '\n' character in the buffer
+*/
+void cleanCinBuffer(){
+    std::cin.clear();  // Clear the error flag
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Ignore remaining characters
+}
+
 void saveIceCreamData(std::vector<IceCream>& iceCreams) {
     std::ofstream file("ice_cream_data.txt");
     if (file.is_open()) {
@@ -41,10 +50,15 @@ void saveIceCreamData(std::vector<IceCream>& iceCreams) {
             file << iceCream.name << " "
                  << iceCream.timesTried << " "
                  << iceCream.rating << " "
+                 << iceCream.exist<< " "
                  << iceCream.location.first << " "
                  << iceCream.location.second << "\n";
         }
         file.close();
+
+        std::cout << "Saved!"<<std::endl;
+    }else{
+        std::cout<< "Error while saving!"<<std::endl;
     }
 }
 
@@ -82,6 +96,8 @@ int getIntegerInput() {
             random_out_of_range_int_phrase();
         }
     }
+
+    cleanCinBuffer();
 
     return input;
 }   
@@ -154,6 +170,7 @@ int userStringInput(std::vector<IceCream> v) {
     std::string userInput;
     std::cout << ">> ";
     std::getline(std::cin, userInput);
+    std::cout<<std::endl;
     
     if(userInput == "r"){
         return 0;
@@ -180,13 +197,21 @@ int userStringInput(std::vector<IceCream> v) {
 
 void print_vector(std::vector<IceCream>& iceCreams) {
     //add 1 to the coords so the shelves start from 1 and not 0
-    for (const auto& iceCream : iceCreams) {
+    for (IceCream& iceCream : iceCreams) {
+        
         std::cout << "Name: " << iceCream.name << ", "
             << "Times Taken: " << iceCream.timesTried << ", "
             << "Rate: " << iceCream.rating << ", "
-            << "Coordinates: (" << iceCream.location.first +1<< ", " << iceCream.location.second +1<< ")"
-            << std::endl;
+            << "Coordinates: (" << iceCream.location.first +1<< ", " << iceCream.location.second +1<< "), ";
+        
+            if(iceCream.exist)
+                std::cout<< "Exist: yes"<<std::endl;
+            else
+                std::cout<< "Exist: no"<<std::endl;
+
+
         } 
+    std::cout<<std::endl;
 }
 
 void recomendation(std::vector<IceCream>& iceCreams){
@@ -236,11 +261,143 @@ void recomendation(std::vector<IceCream>& iceCreams){
 
     
     std::cout<< "\n\nGood choice! Enjoy!\nDon't forget to save before you go :)\n\n";
+    setDialogCounter();
 
 }
 
 void editVector(std::vector<IceCream>& iceCreams){
 
+    bool edit = false;
+    std::pair<int, int> locationEdit;
+    IceCream *editPointer;
+
+    do{
+        std::cout<< "Please, give me the possition (x,y) of the ice cream (assume that the first ice cream is at the top left (1,1)).\nx: ";
+        std::cin >> locationEdit.first;
+        std::cout<< "\ny: ";
+        std::cin >> locationEdit.second;
+
+        --locationEdit.first;
+        --locationEdit.second;
+        for (IceCream& iceCream : iceCreams)
+            if(iceCream.location == locationEdit){
+                edit = true;
+                editPointer = &iceCream;
+                break;
+            }
+
+    if(!edit)
+        std::cout << "There is no ice cream in that position. Try again."<<std::endl;
+
+    } while (!edit);
+
+    cleanCinBuffer();
+
+    std::cout<< "The name of the ice cream is: "<<editPointer->name<<". If you want to change it, type the new name. If not, just press 'enter'."<<std::endl;
+
+    std::string newName;
+    getline(std::cin, newName);
+
+    cleanCinBuffer();
+
+    if(newName == "\0")
+        std::cout<<"You didn't make any change."<<std::endl;
+    else{
+        editPointer->name = newName;
+    }
+
+    //times tasted
+    do
+    {
+   
+    std::cout << "You have taken this ice cream " << editPointer->timesTried<<" times. Is this correct? y/n";      
+    std::string answer; 
+    getline(std::cin, answer);
+    cleanCinBuffer();
+
+    if(answer == "n"){
+        int num = getIntegerInput();
+
+        if(num > 1000)
+            std::cout<< "Hmmmm ok... whatever you want"<<std::endl;
+
+        editPointer->timesTried = num;
+        break;
+
+    }else
+        if(answer == "y")
+            break;
+        else
+            std::cout<< "You have to answer with 'y' for yes, or 'n' for no"<< std::endl;
+    
+
+    } while (true);
+    
+    //rating
+    do
+    {
+    std::cout << "Your rating for this ice cream is" << editPointer->rating<<"/10. Is this correct? y/n";      
+    std::string answer;   
+    getline(std::cin, answer);
+    cleanCinBuffer();
+
+    if(answer == "n"){
+        int num = getIntegerInput();
+
+        if(num < 0)
+            random_negative_int_phrase();
+        else
+            if(num > 10)
+                std::cout<< "The rating is 0 to 10."<<std::endl;
+            else{
+                editPointer->rating = num;
+                break;
+            }
+
+        }else
+            if(answer == "y")
+                break;
+            else
+                std::cout<< "You have to answer with 'y' for yes, or 'n' for no"<< std::endl;
+        
+
+    } while (true);
+    
+    //exist
+        do
+    {
+
+    if(editPointer->exist == 1)    
+        std::cout <<"/10. Is this correct? y/n"; //DOYLEIA EDW AKOMA      
+    std::string answer;   
+    getline(std::cin, answer);
+    cleanCinBuffer();
+
+    if(answer == "n"){
+        int num = getIntegerInput();
+
+        if(num < 0)
+            random_negative_int_phrase();
+        else
+            if(num > 10)
+                std::cout<< "The rating is 0 to 10."<<std::endl;
+            else{
+                editPointer->rating = num;
+                break;
+            }
+
+        }else
+            if(answer == "y")
+                break;
+            else
+                std::cout<< "You have to answer with 'y' for yes, or 'n' for no"<< std::endl;
+        
+
+    } while (true);
+    
+
+
+    setDialogCounter();
 
 }
 
@@ -258,6 +415,9 @@ void top3(std::vector<IceCream>& iceCreams){
     std::cout<< "#2: "<< sortedIceCreams.at(1).name<<" with rating "<< sortedIceCreams.at(1).rating<<"/10."<<" Shelf -> ("<<sortedIceCreams.at(1).location.first<< ","<<sortedIceCreams.at(1).location.second<<")"<<std::endl;
     std::cout<< "#3: "<< sortedIceCreams.at(2).name<<" with rating "<< sortedIceCreams.at(2).rating<<"/10."<<" Shelf -> ("<<sortedIceCreams.at(2).location.first<< ","<<sortedIceCreams.at(2).location.second<<")"<<std::endl;
 
+    std::cout<<std::endl;
+
+    setDialogCounter();
 }
 
 void doNothing(std::vector<IceCream>& iceCreams){
@@ -272,19 +432,23 @@ void finishProgram(std::vector<IceCream>& iceCreams){
 bool passValuesToFile(std::ofstream& outFile, std::vector<IceCream> iceCreams){
 
     if(outFile.is_open()){
-        for (const IceCream& iceCream : iceCreams) {
-            outFile << "\"" << iceCream.name << "\" " << iceCream.timesTried << " "
+        for (IceCream& iceCream : iceCreams) {
+            outFile << "" << iceCream.name << " " << iceCream.timesTried << " "
                         << iceCream.rating << " " << iceCream.exist << " "
                         << iceCream.location.first<< " " << iceCream.location.second << "\n";
         }        
     
     outFile.close();
 
-    }else
+    }else{
+        std::cout <<"PROBLEM"<<std::endl;
+        setDialogCounter();
         return false;
+    }
 
 
     std::cout << "Saved!\n";
+    setDialogCounter();
     return true;
 }
 
