@@ -18,4 +18,5 @@ clean:
 	rm -f $(OBJS) $(TARGET)
 
 run: $(TARGET)
+	clear
 	./$(TARGET)

@@ -39,8 +39,8 @@ std::vector<IceCream> loadIceCreamData() {
  * I have to clean the buffer after using cin because leaves a '\n' character in the buffer
 */
 void cleanCinBuffer(){
-    std::cin.clear();  // Clear the error flag
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Ignore remaining characters
+    std::cin.clear();  // Clear the error flag
 }
 
 void saveIceCreamData(std::vector<IceCream>& iceCreams) {
@@ -270,12 +270,15 @@ void editVector(std::vector<IceCream>& iceCreams){
     bool edit = false;
     std::pair<int, int> locationEdit;
     IceCream *editPointer;
+    IceCream old;
 
     do{
         std::cout<< "Please, give me the possition (x,y) of the ice cream (assume that the first ice cream is at the top left (1,1)).\nx: ";
         std::cin >> locationEdit.first;
+        cleanCinBuffer();
         std::cout<< "\ny: ";
         std::cin >> locationEdit.second;
+        cleanCinBuffer();
 
         --locationEdit.first;
         --locationEdit.second;
@@ -283,6 +286,7 @@ void editVector(std::vector<IceCream>& iceCreams){
             if(iceCream.location == locationEdit){
                 edit = true;
                 editPointer = &iceCream;
+                old = *editPointer;
                 break;
             }
 
@@ -291,13 +295,10 @@ void editVector(std::vector<IceCream>& iceCreams){
 
     } while (!edit);
 
-    cleanCinBuffer();
-
     std::cout<< "The name of the ice cream is: "<<editPointer->name<<". If you want to change it, type the new name. If not, just press 'enter'."<<std::endl;
 
     std::string newName;
     getline(std::cin, newName);
-
     cleanCinBuffer();
 
     if(newName == "\0")
@@ -306,16 +307,19 @@ void editVector(std::vector<IceCream>& iceCreams){
         editPointer->name = newName;
     }
 
-    //times tasted
+    
+
+    //times taken
     do
     {
    
-    std::cout << "You have taken this ice cream " << editPointer->timesTried<<" times. Is this correct? y/n";      
+    std::cout << "You have taken this ice cream " << editPointer->timesTried<<" times before. Is this correct? y/n\n";      
     std::string answer; 
     getline(std::cin, answer);
     cleanCinBuffer();
 
     if(answer == "n"){
+        std::cout<<"How many times have you taken this ice cream?\n";
         int num = getIntegerInput();
 
         if(num > 1000)
@@ -336,12 +340,13 @@ void editVector(std::vector<IceCream>& iceCreams){
     //rating
     do
     {
-    std::cout << "Your rating for this ice cream is" << editPointer->rating<<"/10. Is this correct? y/n";      
+    std::cout << "Your rating for this ice cream is " << editPointer->rating<<"/10. Is this correct? y/n\n";      
     std::string answer;   
     getline(std::cin, answer);
     cleanCinBuffer();
 
     if(answer == "n"){
+        std::cout<< "What your rating? (from 0 to 10)\n";
         int num = getIntegerInput();
 
         if(num < 0)
@@ -364,40 +369,40 @@ void editVector(std::vector<IceCream>& iceCreams){
     } while (true);
     
     //exist
-        do
+    do
     {
+   
+        std::cout <<"Is the ice cream on the shelf right now? y/n\n";
+        std::string answer;   
+        getline(std::cin, answer);
+        cleanCinBuffer();
 
-    if(editPointer->exist == 1)    
-        std::cout <<"/10. Is this correct? y/n"; //DOYLEIA EDW AKOMA      
-    std::string answer;   
-    getline(std::cin, answer);
-    cleanCinBuffer();
-
-    if(answer == "n"){
-        int num = getIntegerInput();
-
-        if(num < 0)
-            random_negative_int_phrase();
-        else
-            if(num > 10)
-                std::cout<< "The rating is 0 to 10."<<std::endl;
-            else{
-                editPointer->rating = num;
+        if(answer == "n"){
+            editPointer->exist = false;
+            break;
+        }else
+            if(answer == "y"){
+                editPointer->exist = true;
                 break;
             }
-
-        }else
-            if(answer == "y")
-                break;
             else
                 std::cout<< "You have to answer with 'y' for yes, or 'n' for no"<< std::endl;
-        
+            
 
     } while (true);
-    
 
+        std::cout<< "The editing is over. The changes are: \n";
+        std::cout<< "Name: '"<<old.name<<"' -> '"<< editPointer->name<<"'"<<std::endl;
+        std::cout<< "Times taken: "<<old.timesTried<<" -> "<<editPointer->timesTried<<std::endl;
+        std::cout<< "Rating: "<<old.rating<<"/10 -> "<<editPointer->rating<<"/10"<<std::endl;
+        if(editPointer->exist)
+            std::cout<< "The ice cream is at the shelf right now"<<std::endl;
+        else
+            std::cout<< "The ice cream is not at the shelf right now"<<std::endl;
 
-    setDialogCounter();
+        std::cout<<std::endl;
+
+        setDialogCounter();
 
 }
 
